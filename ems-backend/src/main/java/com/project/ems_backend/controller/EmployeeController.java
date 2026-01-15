@@ -2,6 +2,7 @@ package com.project.ems_backend.controller;
 
 import com.project.ems_backend.dto.EmployeeDto;
 import com.project.ems_backend.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class EmployeeController {
 
     //REST API Add Employee
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
 
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
@@ -41,7 +42,7 @@ public class EmployeeController {
 
     //REST API Update Employee
     @PutMapping("{id}")
-    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,@RequestBody EmployeeDto updatedEmployee) {
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable("id") Long employeeId,@Valid @RequestBody EmployeeDto updatedEmployee) {
         EmployeeDto employeeDto = employeeService.updateEmployee(employeeId, updatedEmployee);
 
         return ResponseEntity.ok(employeeDto);
