@@ -15,7 +15,7 @@ function ListEmployeeComponent() {
     
 
     return (
-        <div className="container mx-auto mt-10 px-4">
+        <div className="container grow mx-auto mt-10 px-4">
             <h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>List of Employees</h2>
             <table className='w-full border-collapse bg-white'>
                 <thead className='bg-gray-800 text-white'>
