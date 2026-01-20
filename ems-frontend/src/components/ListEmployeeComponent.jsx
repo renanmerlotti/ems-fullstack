@@ -20,10 +20,14 @@ function ListEmployeeComponent() {
         navigator('/add-employee')
     }
 
+    function updateEmployee(id) {
+        navigator(`/edit-employee/${id}`)
+    }
+
     return (
         <div className="container grow mx-auto mt-10 px-4">
             <h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>List of Employees</h2>
-            <button className='flex w-44 mb-4 py-2 items-center justify-center rounded-2xl bg-blue-700 text-white font-semibold hover:bg-blue-800' onClick={addNewEmployee}>
+            <button className='flex w-44 mb-4 py-2 items-center justify-center rounded-xl bg-blue-700 text-white font-semibold hover:bg-blue-800' onClick={addNewEmployee}>
                 <span className='mb-0.5'>Adicionar Funcionário</span>
             </button>
             <table className='w-full border-collapse bg-white'>
@@ -34,6 +38,7 @@ function ListEmployeeComponent() {
                         <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Sobrenome</th>
                         <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Idade</th>
                         <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Email</th>
+                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Ações</th>
                     </tr>
                 </thead>
                 <tbody className='divide-y divide-gray-200'>
@@ -45,6 +50,14 @@ function ListEmployeeComponent() {
                                 <td className='px-6 py-4 text-sm text-gray-600'>{employee.lastName}</td>
                                 <td className='px-6 py-4 text-sm text-gray-600'>{employee.age}</td>
                                 <td className='px-6 py-4 text-sm text-gray-600 italic'>{employee.email}</td>
+                                <td>
+                                    <button 
+                                    className='w-20 py-1 rounded-xl font-semibold bg-blue-700 hover:bg-blue-800 text-white' 
+                                    onClick={() => updateEmployee(employee.id)}
+                                    >
+                                    Update
+                                    </button>
+                                </td>
                             </tr>
                         )
                     }

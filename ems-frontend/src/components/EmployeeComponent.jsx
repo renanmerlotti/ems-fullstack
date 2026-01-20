@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { createEmployee } from '../services/EmployeeService'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 function EmployeeComponent() {
 
@@ -8,6 +8,8 @@ function EmployeeComponent() {
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [age, setAge] = useState('')
+
+  const {id} = useParams()
 
   const [errors, setErrors] = useState({
     firstName: '',
@@ -96,13 +98,20 @@ function EmployeeComponent() {
     return valid
   }
 
+  function pageTitle() {
+    if(id) {
+      return <h2 className='text-white p-8 text-2xl text-center font-semibold'>Editar Funcionário</h2>
+    } else {
+      return <h2 className='text-white p-8 text-2xl text-center font-semibold'>Adicionar Funcionário</h2>
+    }
+  }
+
   return (
     <div className='container grow mx-auto px-30 py-28 flex justify-center'>
       <div className='w-full max-w-md rounded-2xl bg-gray-900'>
-        <h2 className='text-white p-8 text-2xl text-center font-semibold'>
-          Adicionar Funcionário
-        </h2>
-
+        {
+          pageTitle()
+        }
         <form action="" className='flex flex-col gap-1 px-4'>
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Nome do Funcionário</label>
