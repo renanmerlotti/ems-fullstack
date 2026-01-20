@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react'
-import { listEmployees } from '../services/EmployeeService'
+import React, { useEffect, useState } from 'react'
+import { deleteEmployee, listEmployees } from '../services/EmployeeService'
 import { useNavigate } from 'react-router-dom'
 
 function ListEmployeeComponent() {
@@ -9,13 +9,17 @@ function ListEmployeeComponent() {
     const navigator = useNavigate()
 
     useEffect(() => {
+        getAllEmployees()
+    }, [])
+
+    function getAllEmployees() {
         listEmployees().then((response) => {
             setEmployees(response.data)
         }).catch(error => {
             console.error(error)
         })
-    }, [])
-    
+    }
+
     function addNewEmployee() {
         navigator('/add-employee')
     }
@@ -24,50 +28,69 @@ function ListEmployeeComponent() {
         navigator(`/edit-employee/${id}`)
     }
 
+    function removeEmployee(id) {
+        console.log(id)
+
+        deleteEmployee(id).then((response) => {
+            getAllEmployees()
+        }).catch(error => {
+            console.log(error)
+        })
+    }
+
     return (
         <div className="container grow mx-auto mt-10 px-4">
             <h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>List of Employees</h2>
             <button className='flex w-44 mb-4 py-2 items-center justify-center rounded-xl bg-blue-700 text-white font-semibold hover:bg-blue-800' onClick={addNewEmployee}>
                 <span className='mb-0.5'>Adicionar Funcionário</span>
             </button>
-            <table className='w-full border-collapse bg-white'>
-                <thead className='bg-gray-800 text-white'>
-                    <tr>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>ID do Funcionário</th>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Nome</th>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Sobrenome</th>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Idade</th>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Email</th>
-                        <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Ações</th>
-                    </tr>
-                </thead>
-                <tbody className='divide-y divide-gray-200'>
-                    {
-                        employees.map(employee =>
-                            <tr key={employee.id} className='hover:bg-gray-50 transition-colors'>
-                                <td className='px-6 py-4 text-sm text-gray-700 font-bold'>{employee.id}</td>
-                                <td className='px-6 py-4 text-sm text-gray-600'>{employee.firstName}</td>
-                                <td className='px-6 py-4 text-sm text-gray-600'>{employee.lastName}</td>
-                                <td className='px-6 py-4 text-sm text-gray-600'>{employee.age}</td>
-                                <td className='px-6 py-4 text-sm text-gray-600 italic'>{employee.email}</td>
-                                <td>
-                                    <button 
-                                    className='w-20 py-1 rounded-xl font-semibold bg-blue-700 hover:bg-blue-800 text-white' 
-                                    onClick={() => updateEmployee(employee.id)}
-                                    >
-                                    Update
-                                    </button>
-                                </td>
-                            </tr>
-                        )
-                    }
+            <div className='overflow-x-auto rounded-2xl shadow-lg'>
+                <table className='w-full border-collapse bg-white'>
+                    <thead className='bg-gray-800 text-white'>
+                        <tr>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>ID do Funcionário</th>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Nome</th>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Sobrenome</th>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Idade</th>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-left tracking-wider'>Email</th>
+                            <th className='px-6 py-3 font-semibold uppercase text-sm text-center tracking-wider'>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody className='divide-y divide-gray-200'>
+                        {
+                            employees.map(employee =>
+                                <tr key={employee.id} className='hover:bg-gray-50 transition-colors'>
+                                    <td className='px-6 py-4 text-sm text-gray-700 font-bold'>{employee.id}</td>
+                                    <td className='px-6 py-4 text-sm text-gray-600'>{employee.firstName}</td>
+                                    <td className='px-6 py-4 text-sm text-gray-600'>{employee.lastName}</td>
+                                    <td className='px-6 py-4 text-sm text-gray-600'>{employee.age}</td>
+                                    <td className='px-6 py-4 text-sm text-gray-600 italic'>{employee.email}</td>
+                                    <td className='flex items-center justify-center text-center px-6 py-4 text-sm text-gray-600'>
+                                        <button
+                                            className='mx-5 w-20 py-1 rounded-xl font-semibold bg-blue-700 hover:bg-blue-800 text-white'
+                                            onClick={() => updateEmployee(employee.id)}
+                                        >
+                                            Update
+                                        </button>
+                                        <button
+                                            className='mx-5 w-20 py-1 rounded-xl font-semibold bg-red-700 hover:bg-red-800 text-white'
+                                            onClick={() => removeEmployee(employee.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            )
+                        }
 
-                    <tr>
+                        <tr>
 
-                    </tr>
+                        </tr>
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     )
 }

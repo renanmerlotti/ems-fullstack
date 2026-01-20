@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { createEmployee, getEmployee } from '../services/EmployeeService'
+import { createEmployee, getEmployee, updateEmployee } from '../services/EmployeeService'
 import { useNavigate, useParams } from 'react-router-dom'
 
 function EmployeeComponent() {
@@ -9,7 +9,7 @@ function EmployeeComponent() {
   const [email, setEmail] = useState('')
   const [age, setAge] = useState('')
 
-  const {id} = useParams()
+  const { id } = useParams()
 
   const [errors, setErrors] = useState({
     firstName: '',
@@ -21,7 +21,7 @@ function EmployeeComponent() {
   const navigator = useNavigate()
 
   useEffect(() => {
-    if(id) {
+    if (id) {
       getEmployee(id).then((response) => {
         setFirstName(response.data.firstName)
         setLastName(response.data.lastName)
@@ -49,57 +49,66 @@ function EmployeeComponent() {
     setAge(e.target.value)
   }
 
-  function saveEmployee (e) {
+  function saveOrUpdateEmployee(e) {
     e.preventDefault()
 
     const ageInt = parseInt(age)
 
-    if(validateForm()) {
+    if (validateForm()) {
       const employee = {
-      firstName,
-      lastName,
-      email,
-      age: ageInt
+        firstName,
+        lastName,
+        email,
+        age: ageInt
       }
       console.log(employee)
 
-      createEmployee(employee).then((response) => {
-        console.log(response.data)
-        navigator('/employees')
-      })
-    }
-    
+      if (id) {
+        updateEmployee(id, employee).then((response) => {
+          console.log(response.data)
+          navigator('/employees')
+        }).catch(error => {
+            console.log(error)
+          })
+      } else {
+        createEmployee(employee).then((response) => {
+          console.log(response.data)
+          navigator('/employees')
+        }).catch(error => {
+          console.log(error)
+          })
+      }
 
-    
+    }
   }
 
   function validateForm() {
     let valid = true
 
-    const errorsCopy = {... errors}
+    const errorsCopy = { ...errors }
 
-    if(firstName.trim()) {
+    if (firstName.trim()) {
       errorsCopy.firstName = '';
     } else {
       errorsCopy.firstName = "O nome do funcionário é obrigatório"
       valid = false
     }
 
-    if(lastName.trim()) {
+    if (lastName.trim()) {
       errorsCopy.lastName = ''
     } else {
       errorsCopy.lastName = "O sobrenome do funcionário é obrigatório"
       valid = false
     }
 
-    if(email.trim()) {
+    if (email.trim()) {
       errorsCopy.email = ''
     } else {
       errorsCopy.email = "O email do funcionário é obrigatório"
       valid = false
     }
 
-    if(age) {
+    if (age) {
       errorsCopy.age = ''
     } else {
       errorsCopy.age = "A idade do funcionário é obrigatória"
@@ -112,7 +121,7 @@ function EmployeeComponent() {
   }
 
   function pageTitle() {
-    if(id) {
+    if (id) {
       return <h2 className='text-white p-8 text-2xl text-center font-semibold'>Editar Funcionário</h2>
     } else {
       return <h2 className='text-white p-8 text-2xl text-center font-semibold'>Adicionar Funcionário</h2>
@@ -128,13 +137,13 @@ function EmployeeComponent() {
         <form action="" className='flex flex-col gap-1 px-4'>
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Nome do Funcionário</label>
-            <input 
-            type="text"
-            placeholder='Digite o nome do funcionário' 
-            name='firstName'
-            value={firstName}
-            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.firstName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
-            onChange={handleFirstName}
+            <input
+              type="text"
+              placeholder='Digite o nome do funcionário'
+              name='firstName'
+              value={firstName}
+              className={`bg-white rounded-2xl p-2.5 transition-all ${errors.firstName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
+              onChange={handleFirstName}
             />
             <div className='h-5'>
               {errors.firstName && <span className='text-red-500 text-sm'>{errors.firstName}</span>}
@@ -143,13 +152,13 @@ function EmployeeComponent() {
 
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Sobrenome do Funcionário</label>
-            <input 
-            type="text"
-            placeholder='Digite o sobrenome do funcionário' 
-            name='lastName'
-            value={lastName}
-            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.lastName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
-            onChange={handleLastName}
+            <input
+              type="text"
+              placeholder='Digite o sobrenome do funcionário'
+              name='lastName'
+              value={lastName}
+              className={`bg-white rounded-2xl p-2.5 transition-all ${errors.lastName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
+              onChange={handleLastName}
             />
             <div className='h-5'>
               {errors.lastName && <span className='text-red-500 text-sm'>{errors.lastName}</span>}
@@ -158,13 +167,13 @@ function EmployeeComponent() {
 
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Email do Funcionário</label>
-            <input 
-            type="text"
-            placeholder='Digite o email do funcionário' 
-            name='email'
-            value={email}
-            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.email ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
-            onChange={handleEmail}
+            <input
+              type="text"
+              placeholder='Digite o email do funcionário'
+              name='email'
+              value={email}
+              className={`bg-white rounded-2xl p-2.5 transition-all ${errors.email ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
+              onChange={handleEmail}
             />
             <div className='h-5'>
               {errors.email && <span className='text-red-500 text-sm'>{errors.email}</span>}
@@ -173,22 +182,22 @@ function EmployeeComponent() {
 
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Idade do Funcionário</label>
-            <input 
-            type="number"
-            placeholder='Digite a idade do funcionário' 
-            name='age'
-            value={age}
-            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.age ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
-            onChange={handleAge}
+            <input
+              type="number"
+              placeholder='Digite a idade do funcionário'
+              name='age'
+              value={age}
+              className={`bg-white rounded-2xl p-2.5 transition-all ${errors.age ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
+              onChange={handleAge}
             />
             <div className='h-5'>
               {errors.age && <span className='text-red-500 text-sm'>{errors.age}</span>}
             </div>
           </div>
 
-          <button 
-          className='w-full bg-blue-600 text-white p-3 rounded-2xl font-semibold hover:bg-blue-700 transition active:scale-96 duration-150'
-          onClick={saveEmployee}
+          <button
+            className='w-full bg-blue-600 text-white p-3 rounded-2xl font-semibold hover:bg-blue-700 transition active:scale-96 duration-150'
+            onClick={saveOrUpdateEmployee}
           >
             Adicionar Funcionario
           </button>
