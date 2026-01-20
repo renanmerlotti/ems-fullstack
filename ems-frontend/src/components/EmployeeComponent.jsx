@@ -9,6 +9,13 @@ function EmployeeComponent() {
   const [email, setEmail] = useState('')
   const [age, setAge] = useState('')
 
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    age: ''
+  })
+
   const navigator = useNavigate()
 
   const handleFirstName = (e) => {
@@ -32,28 +39,71 @@ function EmployeeComponent() {
 
     const ageInt = parseInt(age)
 
-    const employee = {
+    if(validateForm()) {
+      const employee = {
       firstName,
       lastName,
       email,
       age: ageInt
-    }
-    console.log(employee)
+      }
+      console.log(employee)
 
-    createEmployee(employee).then((response) => {
-      console.log(response.data)
-      navigator('/employees')
-    })
+      createEmployee(employee).then((response) => {
+        console.log(response.data)
+        navigator('/employees')
+      })
+    }
+    
+
+    
+  }
+
+  function validateForm() {
+    let valid = true
+
+    const errorsCopy = {... errors}
+
+    if(firstName.trim()) {
+      errorsCopy.firstName = '';
+    } else {
+      errorsCopy.firstName = "O nome do funcionário é obrigatório"
+      valid = false
+    }
+
+    if(lastName.trim()) {
+      errorsCopy.lastName = ''
+    } else {
+      errorsCopy.lastName = "O sobrenome do funcionário é obrigatório"
+      valid = false
+    }
+
+    if(email.trim()) {
+      errorsCopy.email = ''
+    } else {
+      errorsCopy.email = "O email do funcionário é obrigatório"
+      valid = false
+    }
+
+    if(age) {
+      errorsCopy.age = ''
+    } else {
+      errorsCopy.age = "A idade do funcionário é obrigatória"
+      valid = false
+    }
+
+    setErrors(errorsCopy)
+
+    return valid
   }
 
   return (
-    <div className='container grow mx-auto px-30 py-30 flex justify-center'>
+    <div className='container grow mx-auto px-30 py-28 flex justify-center'>
       <div className='w-full max-w-md rounded-2xl bg-gray-900'>
         <h2 className='text-white p-8 text-2xl text-center font-semibold'>
           Adicionar Funcionário
         </h2>
 
-        <form action="" className='flex flex-col gap-6 px-4'>
+        <form action="" className='flex flex-col gap-1 px-4'>
           <div className='flex flex-col gap-1.5'>
             <label htmlFor="" className='text-white text-xl ml-1'>Nome do Funcionário</label>
             <input 
@@ -61,9 +111,12 @@ function EmployeeComponent() {
             placeholder='Digite o nome do funcionário' 
             name='firstName'
             value={firstName}
-            className='bg-white rounded-2xl p-2.5 border-none'
+            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.firstName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
             onChange={handleFirstName}
             />
+            <div className='h-5'>
+              {errors.firstName && <span className='text-red-500 text-sm'>{errors.firstName}</span>}
+            </div>
           </div>
 
           <div className='flex flex-col gap-1.5'>
@@ -73,9 +126,12 @@ function EmployeeComponent() {
             placeholder='Digite o sobrenome do funcionário' 
             name='lastName'
             value={lastName}
-            className='bg-white rounded-2xl p-2.5 border-none'
+            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.lastName ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
             onChange={handleLastName}
             />
+            <div className='h-5'>
+              {errors.lastName && <span className='text-red-500 text-sm'>{errors.lastName}</span>}
+            </div>
           </div>
 
           <div className='flex flex-col gap-1.5'>
@@ -85,9 +141,12 @@ function EmployeeComponent() {
             placeholder='Digite o email do funcionário' 
             name='email'
             value={email}
-            className='bg-white rounded-2xl p-2.5 border-none'
+            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.email ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
             onChange={handleEmail}
             />
+            <div className='h-5'>
+              {errors.email && <span className='text-red-500 text-sm'>{errors.email}</span>}
+            </div>
           </div>
 
           <div className='flex flex-col gap-1.5'>
@@ -97,9 +156,12 @@ function EmployeeComponent() {
             placeholder='Digite a idade do funcionário' 
             name='age'
             value={age}
-            className='bg-white rounded-2xl p-2.5 border-none'
+            className={`bg-white rounded-2xl p-2.5 transition-all ${errors.age ? 'border-2 border-red-500' : 'border-2 border-transparent'}`}
             onChange={handleAge}
             />
+            <div className='h-5'>
+              {errors.age && <span className='text-red-500 text-sm'>{errors.age}</span>}
+            </div>
           </div>
 
           <button 
